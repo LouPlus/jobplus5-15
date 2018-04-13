@@ -3,7 +3,7 @@ from wtforms import StringField,PasswordField,BooleanField,SubmitField
 from wtforms.validators import Required,Length,Email,EqualTo
 from wtforms import ValidationError
 
-class LoginForm(Form):
+class LoginForm(Form):        #登录页面的内容  
     email = StringField('邮箱',validators=[Required(),Email()])
     password = PasswordField('密码',validators=[Required(),Length(6,24)])
     remember_me = BooleanField('记住我')
@@ -15,7 +15,7 @@ class LoginForm(Form):
 #还差检测密码的，暂时看不懂怎么写
 
 
-class PersonalRegister(Form):
+class PersonalRegister(Form):    #求职者注册页面内容
     username = StringField('用户名',validators=[Required(),Length(1,64)])
     email = StringField('邮箱',validators=[Required(),Email()])
     password = PasswordField('密码',validators=[Required(),Length(6,24)])
