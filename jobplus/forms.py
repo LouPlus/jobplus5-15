@@ -1,7 +1,10 @@
+import os
+from flask import url_for
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,BooleanField,SubmitField,ValidationError,
+from wtforms import StringField,PasswordField,BooleanField,SubmitField,ValidationError,IntegerField
 from wtforms.validators import Required,Length,Email,EqualTo
-from wtforms import ValidationError
+from jobplus.models import db,User
+from flask_wtf.file import FileField,FileRequired
 
 class LoginForm(Form):        #登录页面的内容  
     email = StringField('邮箱',validators=[Required(),Email()])
@@ -19,7 +22,7 @@ class LoginForm(Form):        #登录页面的内容
             raise ValidationError('passwrod error')
 
 
-class Register(Form):    #求职者注册页面内容
+class Register(Form):    #求职者和公司的注册页面内容
     username = StringField('用户名',validators=[Required(),Length(1,64)])
     email = StringField('邮箱',validators=[Required(),Email()])
     password = PasswordField('密码',validators=[Required(),Length(6,24)])
@@ -40,3 +43,35 @@ class Register(Form):    #求职者注册页面内容
         db.session.add(user)
         db.session.commit()
         return user
+
+class UserProfileForm(Form):
+    real_name = StringField('name',validators=[Required(),Length(1,64)])
+    email = StringField('email',validators=[Required(),Email()])
+    password = PasswordField('password(no write no change)')
+    phone = StringField('phone number',validators=[Required()])
+    work_year = IntegerField('work year')
+    resume_url = FileField('upload resume')
+    submit = SubmitField('submit')
+
+    def validate_phone(self,field):
+        phone = field.data
+        if phone[:2] not in ('13','15','18') and len(phone) !=11:
+            raise ValidationError('please enter a correct phone number')
+
+    def upload_resume(self):
+        f = self.resume.data
+        filename = self.real_name.data + '.pdf'
+        f.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),'static','resume',filename))
+        return filename
+
+    def update_profile(self,user):
+        user.real_name = self.real_name.data
+        user.email = self.email.data
+        if self.password.data:
+            user.password = self.password.data
+        user.phone = self.phone.data
+        user.work_year = self.work_year.data
+        filename = self.upload_resume()
+        user.resume_url = url_for('static',filename=os.path.join('resumes',filename))
+        db.session.add(user)
+        db.session.commit()
