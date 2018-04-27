@@ -15,7 +15,7 @@ class LoginForm(FlaskForm):        #登录页面的内容
 
     def validate_email(self,field):
         if field.data and not User.query.filter_by(email=field.data).first():
-            raise ValidationError('邮箱被注册')
+            raise ValidationError('邮箱未被注册')
 
     def validate_password(self,field):
         user = User.query.filter_by(email=self.email.data).first()
@@ -24,9 +24,9 @@ class LoginForm(FlaskForm):        #登录页面的内容
 
 
 class RegisterForm(FlaskForm):    #求职者和公司的注册页面内容
-    name = StringField('用户名',validators=[Required(),Length(1,64)])
-    email = StringField('邮箱',validators=[Required(),Email()])
-    password = PasswordField('密码',validators=[Required(message='too long or too short'),Length(6,24)])
+    name = StringField('用户名',validators=[Required(message='请输入名字'),Length(1,64)])
+    email = StringField('邮箱',validators=[Required(message='请输入邮箱'),Email()])
+    password = PasswordField('密码',validators=[Required(message='密码在6－24字符之内'),Length(6,24)])
     repear_password = PasswordField(
         '重复密码',
         validators=[Required(),Length(6,24),
@@ -41,7 +41,7 @@ class RegisterForm(FlaskForm):    #求职者和公司的注册页面内容
 
     def validate_name(self,field):
         if User.query.filter_by(name=field.data).first():
-            raise ValidationError('名已经被注册')
+            raise ValidationError('名字已经被注册')
 
     def create_user(self):
         user = User()
