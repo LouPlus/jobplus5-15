@@ -71,6 +71,7 @@ class UserProfileForm(FlaskForm):
 
     def upload_resume(self):
         f = self.resume_url.data
+        print(type(f))
         filename = self.real_name.data + '.pdf'
         f.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static', 'resume', filename))
         return filename
