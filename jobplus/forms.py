@@ -3,14 +3,14 @@ import os
 from flask import url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, IntegerField, TextAreaField
-from wtforms.validators import Required, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo
 from jobplus.models import db, User, Job
-from flask_wtf.file import FileField, FileRequired
+from flask_wtf.file import FileField, FileDataRequired
 
 
 class LoginForm(FlaskForm):  # 登录页面的内容
-    name_email = StringField('邮箱/名称', validators=[Required()])
-    password = PasswordField('密码', validators=[Required(), Length(6, 24)])
+    name_email = StringField('邮箱/名称', validators=[DataRequired()])
+    password = PasswordField('密码', validators=[DataRequired(), Length(6, 24)])
     remember_me = BooleanField('记住我')
     submit = SubmitField('提交')
 
@@ -19,29 +19,20 @@ class LoginForm(FlaskForm):  # 登录页面的内容
             raise ValidationError('邮箱或者用户名未注册')
 
     def validate_password(self, field):
-        '''
         user = User.query.filter_by(email=self.name_email.data).first()
-        if user and not user.check_password(field.data):
-            raise ValidationError('密码错误')
-        user = User.query.filter_by(name=self.name_email.data).first()
-        if user and not user.check_password(field.data):
-            raise ValidationError('密码错误')
-        '''
-        if User.query.filter_by(email=self.name_email.data).first():
-            user = User.query.filter_by(email=self.name_email.data).first()
-        else:
+        if not user:
             user = User.query.filter_by(name=self.name_email.data).first()
         if user and not user.check_password(field.data):
             raise ValidationError('密码错误')
 
 
 class RegisterForm(FlaskForm):  # 求职者和公司的注册页面内容
-    name = StringField('用户名', validators=[Required(message='请输入名字'), Length(1, 64)])
-    email = StringField('邮箱', validators=[Required(message='请输入邮箱'), Email()])
-    password = PasswordField('密码', validators=[Required(message='密码在6－24字符之内'), Length(6, 24)])
+    name = StringField('用户名', validators=[DataRequired(message='请输入名字'), Length(1, 64)])
+    email = StringField('邮箱', validators=[DataRequired(message='请输入邮箱'), Email()])
+    password = PasswordField('密码', validators=[DataRequired(message='密码在6－24字符之内'), Length(6, 24)])
     repear_password = PasswordField(
         '重复密码',
-        validators=[Required(), Length(6, 24),
+        validators=[DataRequired(), Length(6, 24),
                     EqualTo('password', message='密码要一致')]
     )
     submit = SubmitField('注册')
@@ -63,12 +54,12 @@ class RegisterForm(FlaskForm):  # 求职者和公司的注册页面内容
 
 
 class UserProfileForm(FlaskForm):
-    real_name = StringField('姓名', validators=[Required(), Length(1, 64)])
-    email = StringField('邮箱', validators=[Required(), Email()])
+    real_name = StringField('姓名', validators=[DataRequired(), Length(1, 64)])
+    email = StringField('邮箱', validators=[DataRequired(), Email()])
     password = PasswordField('密码(no write no change)')
-    phone = StringField('手机号', validators=[Required()])
+    phone = StringField('手机号', validators=[DataRequired()])
     work_years = IntegerField('工作年限')
-    resume_url = FileField('上传简历',validators=[FileRequired()])
+    resume_url = FileField('上传简历',validators=[FileDataRequired()])
     submit = SubmitField('提交')
 
     def validate_phone(self, field):
@@ -98,10 +89,10 @@ class UserProfileForm(FlaskForm):
 
 class CompanyProfileForm(FlaskForm):
     name = StringField('企业名称')
-    email = StringField('邮箱', validators=[Required(), Email()])
+    email = StringField('邮箱', validators=[DataRequired(), Email()])
     password = PasswordField('密码(不填写保持不变)')
     phone = StringField('手机号')
-    slug = StringField('Slug', validators=[Required(), Length(4,24)])
+    slug = StringField('Slug', validators=[DataRequired(), Length(4,24)])
     address = StringField('地址', validators=[Length(4,64)])
     website = StringField('公司网站')
     logo = StringField('Logo')
@@ -131,7 +122,7 @@ class CompanyProfileForm(FlaskForm):
 
 
 class UserEditForm(FlaskForm):
-    email = StringField('邮箱', validators=[Required(), Email()])
+    email = StringField('邮箱', validators=[DataRequired(), Email()])
     password = PasswordField('密码')
     real_name = StringField('姓名')
     phone = StringField('手机号')
@@ -147,7 +138,7 @@ class UserEditForm(FlaskForm):
 
 class CompanyEditForm(FlaskForm):
     name = StringField('企业名称')
-    email = StringField('邮箱', validators=[Required(), Email()])
+    email = StringField('邮箱', validators=[DataRequired(), Email()])
     password = PasswordField('密码')
     phone = StringField('手机号')
     website = StringField('公司网站', validators=[Length(0,64)])

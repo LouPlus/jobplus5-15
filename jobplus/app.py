@@ -1,5 +1,5 @@
 # coding=utf8
-from flask import Flask
+from flask import Flask, render_template
 from jobplus.models import db, User
 from jobplus.config import configs
 from .handlers import front, user, company, job, admin
@@ -12,6 +12,9 @@ def create_app(config):
     app.config.from_object(configs.get(config))
     register_extentions(app)
     register_blueprints(app)
+    @app.errorhandler(404)
+    def not_found(error):
+        return render_template('404.html'), 404
     return app
 
 
