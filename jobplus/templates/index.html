@@ -20,27 +20,27 @@
 </div>
 
 <div class='job-list'>
-    {% for job in newest_jobs %}
+  {% for job in newest_jobs %}
     {{ render_job(job) }}
-    {% endfor %}
+  {% endfor %}
 </div>
 
-<p class='list-more'>
+<h4 align='center' class='list-more'>
 <a href="{{ url_for('job.index') }}">list more</a>
-</p>
+</h4>
 
 <div class='list-title'>
     <li role='persentation' class='active'>newset companies</li>
 </div>
 
-<div class='company-list'>
-    {% for company in newest_companies %}
+<div class='row'>
+  {% for company in newest_companies %}
     {{ render_company(company) }}
-    {% endfor %}
+  {% endfor %}
 </div>
 
-<p class='list-more'>
-<a href="{{ url_for('company.index') }}">list more</a>
-</p>
+<h4 align='center'>
+  <a href="{{ url_for('company.index') }}">list more</a>
+</h4>
 
 {% endblock %}}

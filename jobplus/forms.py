@@ -2,10 +2,12 @@
 import os
 from flask import url_for
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, IntegerField, TextAreaField
+from wtforms import (StringField, PasswordField, BooleanField,
+    SubmitField, ValidationError, IntegerField, TextAreaField)
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from jobplus.models import db, User, Job
-from flask_wtf.file import FileField, FileDataRequired
+from flask_wtf.file import FileField
+#, FileDataRequired
 
 
 class LoginForm(FlaskForm):  # 登录页面的内容
@@ -59,7 +61,8 @@ class UserProfileForm(FlaskForm):
     password = PasswordField('密码(no write no change)')
     phone = StringField('手机号', validators=[DataRequired()])
     work_years = IntegerField('工作年限')
-    resume_url = FileField('上传简历',validators=[FileDataRequired()])
+    resume_url = FileField('上传简历')
+#,validators=[FileDataRequired()])
     submit = SubmitField('提交')
 
     def validate_phone(self, field):

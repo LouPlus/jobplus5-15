@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="http://labfile.oss.aliyuncs.com/courses/923/week7/code/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="static/main.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     </head>
     <body>
 <nav class="navbar navbar-inverse">
@@ -64,11 +64,12 @@
       {% endif %}
   {% endwith %}
   {% block body %}{% endblock %}
+  <br><br>
   <div align='center'>Copyright 2018 By Xiaozhizhi</div>
 </div>
       <!-- Bootstrap ?? jQuery -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <script src="http://labfile.oss.aliyuncs.com/courses/923/week7/code/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+      <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </body>    
 </html>
 
